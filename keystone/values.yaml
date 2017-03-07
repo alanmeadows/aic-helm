@@ -108,6 +108,20 @@ resources:
         memory: "128Mi"
         cpu: "500m"
 
+conf:
+  keystone: 
+    provider: uuid
+  oslo:
+    log: {}
+    messaging: {}
+    cache: {}
+    middleware: {}
+    db:
+      db_max_retries: -1
+    policy: {}
+  osprofiler: {}
+
+
 # typically overriden by environmental
 # values, but should include all endpoints
 # required by this chart
@@ -121,3 +135,26 @@ endpoints:
     port:
       admin: 35357
       api: 5000
+  oslo.db:
+    username: keystone
+    password: password
+    hosts:
+      default: mariadb
+    path: /keystone
+    scheme: mysql+pymysql
+    port:
+      mysql: 3306
+  oslo.messaging:
+    username: keystone
+    password: password
+    hosts:
+      default: rabbitmq
+    path: /openstack
+    scheme: rabbit
+    port:
+      amqp: 5672  
+  oslo.cache:
+    hosts:
+      default: memcache
+    port:
+      memcache: 11211
