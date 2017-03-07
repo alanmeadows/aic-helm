@@ -156,7 +156,7 @@
 # presuming that .Values contains an endpoint: definition for 'neutron-db' with the
 # appropriate attributes, a call such as:
 # 
-# { tuple "neutron-db" "internal" "portName" . | include "helm-toolkit.database_endpoint_uri_lookup" }
+# { tuple "neutron-db" "internal" "portName" . | include "helm-toolkit.authenticated_endpoint_uri_lookup" }
 #
 # where portName is optional if a default port has been defined in .Values
 #

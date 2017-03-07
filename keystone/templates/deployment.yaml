@@ -73,57 +73,42 @@ spec:
             tcpSocket:
               port: {{ .Values.network.port.api }}
           volumeMounts:
-            - name: pod-etc-keystone
+            - name: empty
               mountPath: /etc/keystone
-            - name: keystoneconf
+            - name: keystone-etc
               mountPath: /etc/keystone/keystone.conf
               subPath: keystone.conf
               readOnly: true
-            - name: keystonepaste
+            - name: keystone-etc
               mountPath: /etc/keystone/keystone-paste.ini
               subPath: keystone-paste.ini
               readOnly: true
-            - name: keystonepolicy
+            - name: keystone-etc
               mountPath: /etc/keystone/policy.json
               subPath: policy.json
               readOnly: true
-            - name: keystonessotemplate
+            - name: keystone-etc
               mountPath: /etc/keystone/sso_callback_template.html
               subPath: sso_callback_template.html
               readOnly: true
-            - name: wsgikeystone
+            - name: keystone-etc
               mountPath: /etc/apache2/conf-enabled/wsgi-keystone.conf
               subPath: wsgi-keystone.conf
               readOnly: true
-            - name: mpmeventconf
+            - name: keystone-etc
               mountPath: /etc/apache2/mods-available/mpm_event.conf
               subPath: mpm_event.conf
               readOnly: true
-            - name: startsh
+            - name: keystone-bin
               mountPath: /tmp/start.sh
               subPath: start.sh
               readOnly: true
       volumes:
-        - name: pod-etc-keystone
+        - name: empty
           emptyDir: {}
-        - name: keystoneconf
+        - name: keystone-etc
           configMap:
             name: keystone-etc
-        - name: keystonepaste
+        - name: keystone-bin
           configMap:
             name: keystone-etc
-        - name: keystonepolicy
-          configMap:
-            name: keystone-etc
-        - name: keystonessotemplate
-          configMap:
-            name: keystone-etc
-        - name: wsgikeystone
-          configMap:
-            name: keystone-etc
-        - name: mpmeventconf
-          configMap:
-            name: keystone-etc
-        - name: startsh
-          configMap:
-            name: keystone-bin
