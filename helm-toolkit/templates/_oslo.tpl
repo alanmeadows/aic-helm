@@ -19,18 +19,18 @@
 {{- define "helm-toolkit.oslo_values_setup" -}}
 
 # generate database uri and set .Values.conf.oslo.db.connection
-{{- if empty .Values.conf.oslo.db.connection -}}
-{{- tuple "oslo.db" "internal" "mysql" . | include "helm-toolkit.authenticated_endpoint_uri_lookup" | set .Values.conf.oslo.db "connection" -}}
+{{- if empty .Values.conf.database.oslo.db.connection -}}
+{{- tuple "oslo.db" "internal" "mysql" . | include "helm-toolkit.authenticated_endpoint_uri_lookup" | set .Values.conf.database.oslo.db "connection" -}}
 {{- end -}}
 
 # generate amqp transport uri and set .Values.endpoints.messaging
-{{- if empty .Values.conf.oslo.messaging.transport_url -}}
-{{- tuple "oslo.messaging" "internal" "amqp" . | include "helm-toolkit.authenticated_endpoint_uri_lookup" | set .Values.conf.oslo.messaging "transport_url" -}}
+{{- if empty .Values.conf.default.oslo.messaging.transport_url -}}
+{{- tuple "oslo.messaging" "internal" "amqp" . | include "helm-toolkit.authenticated_endpoint_uri_lookup" | set .Values.conf.default.oslo.messaging "transport_url" -}}
 {{- end -}}
 
 # generate memcache host:port and set .Values.endpoints.memcache
-{{- if empty .Values.conf.oslo.cache -}}
-{{- tuple "oslo.cache" "internal" "memcache" . | include "helm-toolkit.hostname_endpoint_uri_lookup" | set .Values.conf.oslo.cache "memcache_servers" -}}
+{{- if empty .Values.conf.cache.oslo.cache -}}
+{{- tuple "oslo.cache" "internal" "memcache" . | include "helm-toolkit.hostname_endpoint_uri_lookup" | set .Values.conf.cache.oslo.cache "memcache_servers" -}}
 {{- end -}}
 
 {{- end -}}

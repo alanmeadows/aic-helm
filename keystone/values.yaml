@@ -108,18 +108,63 @@ resources:
         memory: "128Mi"
         cpu: "500m"
 
+        #log: {}
+        #messaging: {}
+        #middleware: {}
+        #db:
+          #db_max_retries: -1
+        #policy: {}
+#      osprofiler: {}
+
 conf:
-  keystone: 
-    provider: uuid
-  oslo:
-    log: {}
-    messaging: {}
-    cache: {}
-    middleware: {}
-    db:
-      db_max_retries: -1
-    policy: {}
-  osprofiler: {}
+  default:
+    keystone: 
+      provider: uuid
+    oslo:
+      log: {}
+      messaging: {}
+  cache:
+    oslo:
+      cache: {}
+  cors:
+    oslo:
+      middleware: {}
+    subdomain:
+      oslo:
+        middleware: {}
+  database:
+    oslo:
+      db: {}
+  healthcheck:
+    oslo:
+      middleware: {}
+  matchmaker_redis:
+    oslo:
+      messaging: {}
+  oslo_messaging_amqp:
+    oslo:
+      messaging: {}
+  oslo_messaging_kafka:
+    oslo:
+      messaging: {}
+  oslo_messaging_notifications:
+    oslo:
+      messaging: {}
+  oslo_messaging_rabbit:
+    oslo:
+      messaging: {}
+  oslo_messaging_zmq:
+    oslo:
+      messaging: {}
+  oslo_middleware:
+    oslo:
+      middleware: {}
+  oslo_policy:
+    oslo:
+      policy: {}
+  profiler:
+    osprofiler: {}
+
 
 
 # typically overriden by environmental
