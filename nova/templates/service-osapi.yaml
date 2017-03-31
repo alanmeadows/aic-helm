@@ -21,7 +21,7 @@ metadata:
   name: nova-api
 spec:
   ports:
-  - name: nova-osapi
+  - name: nova-api-osapi
     port: {{ .Values.network.port.osapi }}
   selector:
-    app: nova-osapi
+    app: nova-api-osapi
