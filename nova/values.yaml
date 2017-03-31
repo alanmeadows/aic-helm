@@ -50,11 +50,6 @@ upgrades:
     max_surge: 3
 
 network:
-  ip_address: "0.0.0.0"
-  # TODO(DTadrzak): move external IPs to common, this variable should be shared with
-  # horizon service
-  external_ips: ""
-  minion_interface_name: "eno1"
   dns:
     servers:
       - "10.96.0.10"
@@ -74,22 +69,8 @@ keystone:
   admin_project_name: "admin"
   admin_project_domain: "default"
   admin_region_name: "RegionOne"
-
-  neutron_user: "neutron"
-  neutron_user_domain: "default"
-  neutron_user_role: "admin"
-  neutron_password: "password"
-  neutron_project_name: "service"
-  neutron_project_domain: "default"
-  neutron_region_name: "RegionOne"
-
-  nova_user: "nova"
-  nova_user_domain: "default"
   nova_user_role: "admin"
-  nova_password: "password"
-  nova_project_name: "service"
-  nova_project_domain: "default"
-  nova_region_name: "RegionOne"
+
 
 ceph:
   enabled: false
@@ -98,6 +79,9 @@ ceph:
   cinder_keyring: null
   nova_pool: "vms"
   secret_uuid: ""
+
+libvirt:
+  listen_addr: 0.0.0.0
 
 dependencies:
   api:
@@ -264,8 +248,6 @@ conf:
     keystone_authtoken:
       keystonemiddleware:
         auth_token:
-          auth_type: password
-          auth_version: v3
           auth_type: password
           auth_version: v3
           region_name: RegionOne
