@@ -21,7 +21,7 @@ kind: Deployment
 metadata:
   name: nova-api-osapi
 spec:
-  replicas: {{ .Values.control_replicas }}
+  replicas: {{ .Values.replicas.osapi }}
   revisionHistoryLimit: {{ .Values.upgrades.revision_history }}
   strategy:
     type: {{ .Values.upgrades.pod_replacement_strategy }}
@@ -42,7 +42,7 @@ spec:
         ]'
     spec:
       nodeSelector:
-        {{ .Values.labels.control_node_selector_key }}: {{ .Values.labels.control_node_selector_value }}
+        {{ .Values.labels.osapi.node_selector_key }}: {{ .Values.labels.osapi.node_selector_value }}
       containers:
         - name: nova-osapi
           image: {{ .Values.images.api }}
@@ -64,10 +64,10 @@ spec:
             - nova-api
             - --config-file=/etc/nova/nova.conf
           ports:
-            - containerPort: {{ .Values.network.port.osapi }}
+            - containerPort: {{ .Values.network.osapi.port }}
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.network.port.osapi }}
+              port: {{ .Values.network.osapi.port }}
           volumeMounts:
             - name: nova-etc
               mountPath: /etc/nova/nova.conf

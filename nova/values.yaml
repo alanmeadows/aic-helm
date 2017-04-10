@@ -18,13 +18,38 @@
 # name: value
 
 labels:
-  control_node_selector_key: openstack-control-plane
-  control_node_selector_value: enabled
-  compute_node_selector_key: openstack-compute-node
-  compute_node_selector_value: enabled
-
-control_replicas: 1
-compute_replicas: 1
+  agent:
+    compute:
+      node_selector_key: openstack-compute-node
+      node_selector_value: enabled
+    libvirt:
+      node_selector_key: openstack-compute-node  
+      node_selector_value: enabled
+  conductor:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  consoleauth:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  scheduler:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  osapi:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  api_metadata:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  job:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+    
+replicas:
+  api_metadata: 1
+  osapi: 1
+  conductor: 1
+  consoleauth: 1
+  scheduler: 1
 
 images:
   db_init: quay.io/stackanetes/stackanetes-kolla-toolbox:newton
@@ -39,6 +64,7 @@ images:
   consoleauth: quay.io/stackanetes/stackanetes-nova-consoleauth:newton
   compute: quay.io/stackanetes/stackanetes-nova-compute:newton
   libvirt: quay.io/stackanetes/stackanetes-nova-libvirt:newton
+  bootstrap: quay.io/stackanetes/stackanetes-nova-api:newton
   dep_check: quay.io/stackanetes/kubernetes-entrypoint:v0.1.1
   pull_policy: "IfNotPresent"
 
@@ -49,6 +75,16 @@ upgrades:
     max_unavailable: 1
     max_surge: 3
 
+bootstrap:
+  enabled: true
+  flavors:
+    m1_tiny:
+        name: "m1.tiny"
+        id: "auto"
+        ram: 512
+        disk: 20
+        vcpus: 1
+
 network:
   dns:
     servers:
@@ -56,11 +92,21 @@ network:
       - "8.8.8.8"
     kubernetes_domain: "cluster.local"
     other_domains: ""
-
-  port:
-    osapi: 8774
-    metadata: 8775
-    novncproxy: 6080
+  osapi:
+    name: "nova-osapi"
+    port: 8774
+    node_port:
+      enabled: false
+      port: 30774
+  metadata:
+    name: "nova-metadata"
+    port: 8775
+    node_port:
+      enabled: false
+      port: 30775
+  novncproxy:
+    name: "nova-novncproxy"
+    port: 6080
 
 keystone:
   admin_user: "admin"
@@ -101,6 +147,10 @@ dependencies:
     - nova-db-init
     service:
     - mariadb
+  bootstrap:
+    service:
+    - keystone-api
+    - nova-api
   ks_user:
     service:
     - keystone-api
@@ -438,6 +488,13 @@ resources:
       memory: "1024Mi"
       cpu: "2000m"
   nova_post:
+    requests:
+      memory: "124Mi"
+      cpu: "100m"
+    limits:
+      memory: "1024Mi"
+      cpu: "2000m"
+  bootstrap:
     requests:
       memory: "124Mi"
       cpu: "100m"

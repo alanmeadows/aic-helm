@@ -21,7 +21,7 @@ replicas:
   server: 1
 
 images:
-  db_init: quay.io/stackanetes/stackanetes-kolla-toolbox:newton
+  db_init: quay.io/stackanetes/stackanetes-neutron-server:newton
   db_sync: quay.io/stackanetes/stackanetes-neutron-server:newton
   ks_user: quay.io/stackanetes/stackanetes-kolla-toolbox:newton
   ks_service: quay.io/stackanetes/stackanetes-kolla-toolbox:newton
@@ -78,9 +78,15 @@ network:
   interface:
     external: enp12s0f0
     default: enp11s0f0
-  port:
-    server: 9696
-    metadata: 8775
+  server:
+    name: "neutron-server"
+    port: 9696
+    node_port:
+      enabled: false
+      port: 30096
+  metadata:
+    name: "neutron-metadata"
+    port: 8775
 
 memcached:
   host: memcached
@@ -116,14 +122,6 @@ keystone:
   nova_project_domain: "default"
   nova_region_name: "RegionOne"
 
-database:
-  port: 3306
-  root_user: root
-  root_password: password
-  neutron_database_name: neutron
-  neutron_password: password
-  neutron_user: neutron
-
 metadata_agent:
   default:
     debug: 'True'
@@ -139,12 +137,16 @@ metadata:
 ml2:
   tenant_network_types: "flat"
   agent:
-    tunnel_types: null
+    tunnel_types: "vxlan"
   type_drivers:
     - flat
+    - vlan
+    - vxlan
   mechanism_drivers:
     - openvswitch
     - l2population
+  extension_drivers:
+    - port_security
   ml2_type_vxlan:
     vni_ranges: "1:1000"
     vxlan_group: 239.1.1.1
@@ -326,3 +328,17 @@ endpoints:
     scheme: 'http'
     port:
       api: 9696
+  oslo_db:
+    auth:
+      admin:
+        username: root
+        password: password
+      user:
+        username: neutron
+        password: password
+    hosts:
+      default: mariadb
+    path: /neutron
+    scheme: mysql+pymysql
+    port:
+      mysql: 3306

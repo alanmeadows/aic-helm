@@ -178,10 +178,6 @@
 [DEFAULT]
 
 #
-# From nova.conf
-#
-
-#
 # This determines the strategy to use for authentication: keystone or noauth2.
 # 'noauth2' is designed for testing only, as it does no actual credential
 # checking. 'noauth2' provides administrative credentials only if 'admin' is
@@ -284,6 +280,7 @@
 # from .default.nova.conf.vendordata_dynamic_targets
 {{ if not .default.nova.conf.vendordata_dynamic_targets }}#{{ end }}vendordata_dynamic_targets = {{ .default.nova.conf.vendordata_dynamic_targets | default "" }}
 
+<<<<<<< HEAD
 #
 # Path to an optional certificate file or CA bundle to verify dynamic
 # vendordata REST services ssl certificates against.

@@ -21,7 +21,7 @@ kind: Deployment
 metadata:
   name: nova-api-metadata
 spec:
-  replicas: {{ .Values.control_replicas }}
+  replicas: {{ .Values.replicas.api_metadata }}
   revisionHistoryLimit: {{ .Values.upgrades.revision_history }}
   strategy:
     type: {{ .Values.upgrades.pod_replacement_strategy }}
@@ -42,7 +42,7 @@ spec:
         ]'
     spec:
       nodeSelector:
-        {{ .Values.labels.control_node_selector_key }}: {{ .Values.labels.control_node_selector_value }}
+        {{ .Values.labels.api_metadata.node_selector_key }}: {{ .Values.labels.api_metadata.node_selector_value }}
       containers:
         - name: nova-api
           image: {{ .Values.images.api }}
@@ -65,10 +65,10 @@ spec:
             - nova-api-metadata
             - --config-file=/etc/nova/nova.conf
           ports:
-            - containerPort: {{ .Values.network.port.metadata }}
+            - containerPort: {{ .Values.network.metadata.port }}
           readinessProbe:
             tcpSocket:
-              port: {{ .Values.network.port.metadata }}
+              port: {{ .Values.network.metadata.port }}
           volumeMounts:
             - name: nova-etc
               mountPath: /etc/nova/nova.conf

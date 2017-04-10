@@ -18,7 +18,7 @@ use_syslog = False
 use_stderr = True
 
 bind_host = {{ .Values.network.ip_address }}
-bind_port = {{ .Values.network.port.server }}
+bind_port = {{ .Values.network.server.port }}
 
 #lock_path = /var/lock/neutron
 api_paste_config = /usr/share/neutron/api-paste.ini
@@ -70,7 +70,7 @@ l2_population = true
 arp_responder = true
 
 [database]
-connection = mysql+pymysql://{{ .Values.database.neutron_user }}:{{ .Values.database.neutron_password }}@{{ include "helm-toolkit.mariadb_host" . }}/{{ .Values.database.neutron_database_name }}
+connection = {{ tuple "oslo_db" "internal" "user" "mysql" . | include "helm-toolkit.authenticated_endpoint_uri_lookup" }}
 max_retries = -1
 
 [keystone_authtoken]
