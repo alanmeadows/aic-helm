@@ -56,19 +56,19 @@ spec:
           command:
             - bash
             - /tmp/libvirt.sh
-          volumeMounts:            
+          volumeMounts:
+            - name: nova-etc
+              mountPath: /etc/libvirt/libvirtd.conf
+              subPath: libvirtd.conf
+            - name: nova-etc
+              mountPath: /tmp/libvirt.sh
+              subPath: libvirt.sh
             - name: nova-etc
               mountPath: /etc/nova/nova.conf
               subPath: nova.conf
             - name: nova-etc
               mountPath: /etc/resolv.conf
               subPath: resolv.conf
-            - name: nova-etc
-              mountPath: /etc/ceph/ceph.conf
-              subPath: ceph.conf
-            - name: nova-etc
-              mountPath: /etc/ceph/ceph.client.keyring
-              subPath: ceph.client.keyring
             - mountPath: /lib/modules
               name: libmodules
               readOnly: true
@@ -80,6 +80,14 @@ spec:
               mountPath: /run
             - name: cgroup
               mountPath: /sys/fs/cgroup
+            {{- if .Values.ceph.enabled }}
+            - name: nova-etc
+              mountPath: /etc/ceph/ceph.conf
+              subPath: ceph.conf
+            - name: nova-etc
+              mountPath: /etc/ceph/ceph.client.keyring
+              subPath: ceph.client.keyring
+            {{- end }}
 {{ if $mounts_nova_libvirt.volumeMounts }}{{ toYaml $mounts_nova_libvirt.volumeMounts | indent 12 }}{{ end }}
       volumes:
         - name: nova-etc
