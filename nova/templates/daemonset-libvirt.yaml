@@ -60,7 +60,7 @@ spec:
             - name: nova-etc
               mountPath: /etc/libvirt/libvirtd.conf
               subPath: libvirtd.conf
-            - name: nova-etc
+            - name: nova-bin
               mountPath: /tmp/libvirt.sh
               subPath: libvirt.sh
             - name: nova-etc
